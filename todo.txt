@@ -1,0 +1,7 @@
+// To Do List
+
+Get Twitter API Access
+
+Fix isAlpha.isAlpha module (how do you call one function from a function within the same export?)
+
+Figure out how to generate own image (so we don't have to rely on the imgflip API)

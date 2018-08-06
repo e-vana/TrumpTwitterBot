@@ -20,10 +20,11 @@ const dotenv = require('dotenv');
 
 // Twitter for NodeJs
 const Twitter = require('twitter');
-const fs = require('fs')
+const fs = require('fs');
 
 const twitterDetect = require("./functions/twitterDetect.js");
-const spongebobify = require("./functions/spongebobify.js")
+const spongebobify = require("./functions/spongebobify.js");
+const saveTweets = require("./functions/saveTweets.js");
 
 // Required to use .env
 dotenv.config();
@@ -94,16 +95,23 @@ function addPost(tweetText, replyTo) {
   })
 }
 
+
+
 function fetchMemeUrl(memeString) {
-  var date = new Date();
-  var formData = {
-    template_id: 145802073,
-    username: process.env.IMGFLIP_USERNAME,
-    password: process.env.IMGFLIP_PASSWORD,
-    // text0: "does this work?",
-    // text1: "does this work on the bottom?",
-    "boxes[0][text]": memeString
-  };
+    var date = new Date();
+    var formData = {
+        template_id: 145802073,
+        username: process.env.IMGFLIP_USERNAME,
+        password: process.env.IMGFLIP_PASSWORD,
+        // text0: "does this work?",
+        // text1: "does this work on the bottom?",
+        "boxes[0][y]": 10,
+        "boxes[0][text]": memeString,
+        "boxes[0][width]": 557,
+        "boxes[0][height]": 200
+
+
+    };
 
   return new Promise(function (resolve, reject) {
     axios.post('https://api.imgflip.com/caption_image', querystring.stringify(formData)
@@ -123,11 +131,10 @@ async function mainLoop() {
   console.log("Running...")
   var data = await fetchPosts();
   console.log(data);
-  var param = data[0].full_text;
+  var param;
 
   // This function will generate the memeURL from imgflip, pass in the string you want to put on the meme.  It still needs to be spongebobified
-  var memeUrlGenerated = await (fetchMemeUrl(param))
-  console.log(memeUrlGenerated);
+
 
   // Load DB OBJ
 
@@ -136,15 +143,12 @@ async function mainLoop() {
 
 
   // Iterate through data from fetchPosts
-  for (i = 0; i < data.length; i++) {
-    // data[i].id_str is tweet ID string
-
-    // if data[i].id_str IS NOT IN DATABASE, THEN WRITE && generate new meme
-
-    // writeDb(data[i].id_str);
-
-    // some async function generates meme from IMGFLIP
-    // Get URL from IMGFLIP API, Post Tweet
+    for (i = 0; i < data.length; i++) {
+        if (await saveTweets.saveTweets(data[i]) == false) {
+            param = data[0].full_text;
+            var memeUrlGenerated = await (fetchMemeUrl(spongebobify.spongebobify(param)));
+            console.log(memeUrlGenerated);
+        }
     // addPost();
 
 

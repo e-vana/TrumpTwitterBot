@@ -48,20 +48,29 @@ function fetchPosts() {
   var params = {
     screen_name: 'realDonaldTrump',
     trim_user: 1,
-    count: 10,
+    count: 1,
     tweet_mode: 'extended'
 
   };
-
+  // return new Promise(function (resolve, reject) {
+  //   client.get('statuses/user_timeline', params, function (error, tweets, response) {
+  //     if (!error) {
+  //       resolve(tweets);
+  //     }
+  //     else {
+  //       // throw error;
+  //       reject(error);
+  //     }
+  //   })
+  // })
   return new Promise(function (resolve, reject) {
-    client.get('statuses/user_timeline', params, function (error, tweets, response) {
-      if (!error) {
-        resolve(tweets);
-      }
-      else {
-        throw error;
-      }
-    })
+    client.get('statuses/user_timeline', params)
+      .then(function (tweet) {
+        resolve(tweet);
+      })
+      .catch(function (error) {
+        reject(error);
+      })
   })
 }
 
@@ -98,6 +107,7 @@ function addPost(tweetText, replyTo) {
 async function mainLoop() {
   console.log("Running...")
   var data = await fetchPosts();
+  console.log(data);
 
   // Load DB OBJ
 

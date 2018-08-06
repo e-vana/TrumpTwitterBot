@@ -156,6 +156,9 @@ mainLoop();
 
 // fetchMemeUrl('test string');
 
+var memeString = spongebobify.spongebobify(testString2)
+//Mocking Trump 145802073
+//Spongebob 102156234
 
 
 
@@ -179,57 +182,10 @@ mainLoop();
 
 
 
-// testing function imports and stuff
-var testString = "Thank you Georgia! They say that my endorsement last week of Brian Kemp, in the Republican Primary for Governor against a very worthy opponent, lifted him from 5 points down to a 70% to 30% victory! Two very good and talented men in a great race, but congratulations to Brian! @test #maga #Twatter  pic.twitter.com/fakeurl CHINA NUMBA ONE";
-
-var testString2 = "America is OPEN FOR BUSINESS and U.S. Steel is back!";
 
 
-// console.log(twitterDetect.mention(testString));
-// console.log(twitterDetect.hash(testString));
-// console.log(spongebobify.spongebobify(testString2))
-
-function fetchPost() {
-  //Fetch post from Trump's Twitter using API
-
-  //Test Timer
-  var date = new Date();
-  console.log(date);
-
-  var memeString = spongebobify.spongebobify(testString2)
 
 
-  //Mocking Trump 145802073
-  //Spongebob 102156234
-
-
-  // Create payload for the POST response to imgflip endpoint
-  var formData = {
-    template_id: 145802073,
-    username: process.env.IMGFLIP_USERNAME,
-    password: process.env.IMGFLIP_PASSWORD,
-
-    // text0 and text1 will be overwritten if there is anything in the boxes[0][text] or boxes[1][text]
-    text0: "does this work?",
-    text1: "does this work on the bottom?",
-
-    // whatever this fuckery is it actually works, this overwrites text0 & text1 so you can use different capitalization
-    "boxes[0][text]": memeString
-
-    // "boxes[0][text]": "Thank you Georgia! They say that my endorsement last week of Brian Kemp, in the Republican Primary for Governor against a very worthy opponent, lifted him from 5 points down to a 70% to 30% victory! Two very good and talented men in a great race, but congratulations to Brian!"
-  };
-
-  // Axios Request using formData from tweet & config
-  axios.post('https://api.imgflip.com/caption_image', querystring.stringify(formData)
-  ).then(function (response) {
-
-    //response.data.data.url is going to be the generated meme URL
-    console.log(response.data.data.url)
-
-  }).catch(function (error) {
-    console.log(error)
-  })
-}
 
 
 

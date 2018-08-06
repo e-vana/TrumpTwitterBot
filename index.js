@@ -52,17 +52,7 @@ function fetchPosts() {
     tweet_mode: 'extended'
 
   };
-  // return new Promise(function (resolve, reject) {
-  //   client.get('statuses/user_timeline', params, function (error, tweets, response) {
-  //     if (!error) {
-  //       resolve(tweets);
-  //     }
-  //     else {
-  //       // throw error;
-  //       reject(error);
-  //     }
-  //   })
-  // })
+
   return new Promise(function (resolve, reject) {
     client.get('statuses/user_timeline', params)
       .then(function (tweet) {
@@ -104,12 +94,46 @@ function addPost(tweetText, replyTo) {
   })
 }
 
+function fetchMemeUrl(memeString) {
+  var date = new Date();
+  var formData = {
+    template_id: 145802073,
+    username: process.env.IMGFLIP_USERNAME,
+    password: process.env.IMGFLIP_PASSWORD,
+    // text0: "does this work?",
+    // text1: "does this work on the bottom?",
+    "boxes[0][text]": memeString
+  };
+
+  return new Promise(function (resolve, reject) {
+    axios.post('https://api.imgflip.com/caption_image', querystring.stringify(formData)
+    ).then(function (response) {
+
+      //response.data.data.url is going to be the generated meme URL
+      resolve(response.data.data.url)
+      // console.log(response.data.data.url);
+
+    }).catch(function (error) {
+      reject(error)
+    })
+  })
+}
+
 async function mainLoop() {
   console.log("Running...")
   var data = await fetchPosts();
   console.log(data);
+  var param = data[0].full_text;
+
+  // This function will generate the memeURL from imgflip, pass in the string you want to put on the meme.  It still needs to be spongebobified
+  var memeUrlGenerated = await (fetchMemeUrl(param))
+  console.log(memeUrlGenerated);
 
   // Load DB OBJ
+
+  // Test
+
+
 
   // Iterate through data from fetchPosts
   for (i = 0; i < data.length; i++) {
@@ -129,6 +153,8 @@ async function mainLoop() {
 }
 
 mainLoop();
+
+// fetchMemeUrl('test string');
 
 
 
@@ -206,9 +232,6 @@ function fetchPost() {
 }
 
 
-// Fetches post every X ms, 1000ms = 1s, 10000ms = 1m
-// setInterval(fetchPost, 5000);
 
-// fetchPost();
 
 

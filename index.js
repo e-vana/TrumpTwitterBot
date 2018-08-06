@@ -156,7 +156,7 @@ mainLoop();
 
 // fetchMemeUrl('test string');
 
-var memeString = spongebobify.spongebobify(testString2)
+// var memeString = spongebobify.spongebobify(testString2)
 //Mocking Trump 145802073
 //Spongebob 102156234
 

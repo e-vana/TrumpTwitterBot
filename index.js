@@ -22,6 +22,9 @@ const dotenv = require('dotenv');
 const Twitter = require('twitter');
 const fs = require('fs');
 
+// Image to Base64
+const image2base64 = require('image-to-base64');
+
 const twitterDetect = require("./functions/twitterDetect.js");
 const spongebobify = require("./functions/spongebobify.js");
 const saveTweets = require("./functions/saveTweets.js");
@@ -98,20 +101,20 @@ function addPost(tweetText, replyTo) {
 
 
 function fetchMemeUrl(memeString) {
-    var date = new Date();
-    var formData = {
-        template_id: 145802073,
-        username: process.env.IMGFLIP_USERNAME,
-        password: process.env.IMGFLIP_PASSWORD,
-        // text0: "does this work?",
-        // text1: "does this work on the bottom?",
-        "boxes[0][y]": 10,
-        "boxes[0][text]": memeString,
-        "boxes[0][width]": 557,
-        "boxes[0][height]": 200
+  var date = new Date();
+  var formData = {
+    template_id: 145802073,
+    username: process.env.IMGFLIP_USERNAME,
+    password: process.env.IMGFLIP_PASSWORD,
+    // text0: "does this work?",
+    // text1: "does this work on the bottom?",
+    "boxes[0][y]": 10,
+    "boxes[0][text]": memeString,
+    "boxes[0][width]": 557,
+    "boxes[0][height]": 200
 
 
-    };
+  };
 
   return new Promise(function (resolve, reject) {
     axios.post('https://api.imgflip.com/caption_image', querystring.stringify(formData)
@@ -143,12 +146,12 @@ async function mainLoop() {
 
 
   // Iterate through data from fetchPosts
-    for (i = 0; i < data.length; i++) {
-        if (await saveTweets.saveTweets(data[i]) == false) {
-            param = data[0].full_text;
-            var memeUrlGenerated = await (fetchMemeUrl(spongebobify.spongebobify(param)));
-            console.log(memeUrlGenerated);
-        }
+  for (i = 0; i < data.length; i++) {
+    if (await saveTweets.saveTweets(data[i]) == false) {
+      param = data[0].full_text;
+      var memeUrlGenerated = await (fetchMemeUrl(spongebobify.spongebobify(param)));
+      console.log(memeUrlGenerated);
+    }
     // addPost();
 
 
@@ -156,7 +159,7 @@ async function mainLoop() {
 
 }
 
-mainLoop();
+// mainLoop();
 
 // fetchMemeUrl('test string');
 
@@ -164,14 +167,64 @@ mainLoop();
 //Mocking Trump 145802073
 //Spongebob 102156234
 
+function imgToBase() {
+  return new Promise(function (resolve, reject) {
+    image2base64("http://i.imgflip.com/2fdqhn.jpg")
+      .then(
+        (response) => {
+          resolve(response); //cGF0aC90by9maWxlLmpwZw==
+        }
+      )
+      .catch(
+        (error) => {
+          throw (error); //Exepection error....
+        }
+      )
+  })
 
 
+}
 
+// This function makes a POST request to Twitter endpoint with image 64 data
+// RETURNS a media ID that you can attach to a twitter post
 
+function uploadImage(img64) {
+  // DOCS FOR THIS ENDPOINT
+  // https://developer.twitter.com/en/docs/media/upload-media/api-reference/post-media-upload.html
 
+  var client = new Twitter({
+    consumer_key: process.env.API_KEY,
+    consumer_secret: process.env.API_SECRET_KEY,
+    access_token_key: process.env.API_ACCESS_TOKEN,
+    access_token_secret: process.env.API_ACCESS_TOKEN_SECRET
+  });
 
+  var params = {
+    media_data: img64
+  };
 
+  return new Promise(function (resolve, reject) {
+    client.post('media/upload', params, function (error, media, response) {
+      if (!error) {
+        resolve(response.body);
+      }
+      else {
+        console.log(error);
+      }
+    })
+  })
+}
 
+async function testLoop() {
+  console.log("running test loop...")
+  var encodedData = await imgToBase();
+  // console.log(encodedData);
+
+  var twitterImgUploadResponse = await uploadImage(encodedData);
+  console.log(twitterImgUploadResponse)
+}
+
+testLoop();
 
 
 

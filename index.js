@@ -72,24 +72,18 @@ async function mainLoop() {
       var idStrValue = idStr.media_id_string;
 
       var thisHash = twitterDetect.hash(data[i].full_text)
-
-      // var thisHash = ['#testString1', '#testString2', '#testString3']
-      var postStr = '';
-
-      for (i = 0; i < thisHash.length; i++) {
-        var postStr = thisHash[i] + ' ' + postStr;
-
-      }
-      console.log(postStr);
+      console.log(thisHash);
 
       var flag = emoji.get(':us:');
-      var postText = flag + flag + ' ' + '#Trump #Politics' + ' ' + postStr + flag + flag;
+      var postText = flag + flag + ' ' + '#Trump #Politics' + ' ' + thisHash + ' ' + flag + flag;
+      console.log(postText);
       var post = await addPost.addPost(postText, idStrValue);
+      console.log(post);
     }
   }
 }
 
-setInterval(mainLoop, 60000);
+setInterval(mainLoop, 10000);
 
 //Mocking Trump 145802073
 //Spongebob 102156234

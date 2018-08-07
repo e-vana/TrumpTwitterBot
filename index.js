@@ -25,6 +25,9 @@ const fs = require('fs');
 // Image to Base64
 const image2base64 = require('image-to-base64');
 
+// node emoji
+const emoji = require('node-emoji');
+
 //custom functions
 const twitterDetect = require("./functions/twitterDetect.js");
 const spongebobify = require("./functions/spongebobify.js");
@@ -51,38 +54,49 @@ async function mainLoop() {
   // console.log(date);
   console.log("Checking for new Tweet... " + "@" + ' ' + date)
   var data = await fetchPosts.fetchPosts();
-  // console.log(data);
+
   var param;
   // Iterate through data from fetchPosts
   for (i = 0; i < data.length; i++) {
     var dupe = await saveTweets.saveTweets(data[i]);
     if (dupe === false) {
       console.log(dupe);
-      param = data[0].full_text;
+
+      param = data[i].full_text;
+
       var memeUrlGenerated = await (fetchMemeUrl.fetchMemeUrl(spongebobify.spongebobify(param)));
       console.log(memeUrlGenerated);
       console.log("running test loop...")
       var encodedData = await imgToBase.imgToBase(memeUrlGenerated);
-      // console.log(encodedData);
 
       var twitterImgUploadResponse = await uploadImage.uploadImage(encodedData);
       var idStr = JSON.parse(twitterImgUploadResponse);
       var idStrValue = idStr.media_id_string;
 
-      var postText = '#MaGa #TrUmP #PoLiTiCs';
+      var thisHash = twitterDetect.hash(data[i].full_text)
 
+      // var thisHash = ['#testString1', '#testString2', '#testString3']
+      var postStr = '';
+
+      for (i = 0; i < thisHash.length; i++) {
+        var postStr = thisHash[i] + ' ' + postStr;
+
+      }
+      console.log(postStr);
+
+      var flag = emoji.get(':us:');
+      var postText = flag + flag + ' ' + '#Trump #Politics' + ' ' + postStr + flag + flag;
       var post = await addPost.addPost(postText, idStrValue);
       console.log(post);
     }
   }
 }
 
-// setInterval(function () { mainLoop(); }, 60000);
-
 setInterval(mainLoop, 60000);
 
 //Mocking Trump 145802073
 //Spongebob 102156234
+
 
 
 

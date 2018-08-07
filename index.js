@@ -60,23 +60,29 @@ async function mainLoop() {
   for (i = 0; i < data.length; i++) {
     var dupe = await saveTweets.saveTweets(data[i]);
     if (dupe === false) {
+<<<<<<< HEAD
       console.log(dupe);
 
       param = data[i].full_text;
 
+=======
+      param = data[0].full_text;
+>>>>>>> cb586d1ac2e8afb50bdd4fb2fd0a791185dec451
       var memeUrlGenerated = await (fetchMemeUrl.fetchMemeUrl(spongebobify.spongebobify(param)));
-      console.log(memeUrlGenerated);
-      console.log("running test loop...")
       var encodedData = await imgToBase.imgToBase(memeUrlGenerated);
 
       var twitterImgUploadResponse = await uploadImage.uploadImage(encodedData);
       var idStr = JSON.parse(twitterImgUploadResponse);
       var idStrValue = idStr.media_id_string;
 
+<<<<<<< HEAD
       var thisHash = twitterDetect.hash(data[i].full_text)
 
       // var thisHash = ['#testString1', '#testString2', '#testString3']
       var postStr = '';
+=======
+        var postText = '#TrUmP #PoLiTiCs ' + twitterDetect.hash(param);
+>>>>>>> cb586d1ac2e8afb50bdd4fb2fd0a791185dec451
 
       for (i = 0; i < thisHash.length; i++) {
         var postStr = thisHash[i] + ' ' + postStr;
@@ -87,7 +93,6 @@ async function mainLoop() {
       var flag = emoji.get(':us:');
       var postText = flag + flag + ' ' + '#Trump #Politics' + ' ' + postStr + flag + flag;
       var post = await addPost.addPost(postText, idStrValue);
-      console.log(post);
     }
   }
 }

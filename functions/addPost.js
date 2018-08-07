@@ -15,7 +15,6 @@ module.exports = {
             status: tweetText,
             // in_reply_to_status_id: replyTo,
             media_ids: imgId
-
         };
 
         return new Promise(function (resolve, reject) {

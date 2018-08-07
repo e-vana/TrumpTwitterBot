@@ -10,15 +10,17 @@ module.exports = {
                 }
                 else {
                     var tweets = JSON.parse(data);
-                    tweets.Tweets.forEach(function (element) {
-                        if (element != null && element == obj.id_str) {
+                    for (var i = 0; i < tweets.Tweets.length; i++) {
+                        if (tweets.Tweets[i] != null && tweets.Tweets[i] == obj.id_str) {
                             exists = true;
+                            break;
                         }
                         else {
                             exists = false;
                         }
-                    });
+                    }
                     if (exists === false) {
+                        console.log(obj.id_str);
                         tweets.Tweets.push(obj.id_str);
                         var json = JSON.stringify(tweets);
                         fs.writeFile('db.json', json, function (err) {

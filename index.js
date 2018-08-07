@@ -75,7 +75,7 @@ async function mainLoop() {
     }
 }
 
-setInterval(function () { mainLoop() }, 60000);
+setInterval(function () { mainLoop(); }, 60000);
 
 //Mocking Trump 145802073
 //Spongebob 102156234

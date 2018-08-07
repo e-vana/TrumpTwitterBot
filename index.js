@@ -57,29 +57,25 @@ async function mainLoop() {
   for (i = 0; i < data.length; i++) {
     var dupe = await saveTweets.saveTweets(data[i]);
     if (dupe === false) {
-      console.log(dupe);
       param = data[0].full_text;
       var memeUrlGenerated = await (fetchMemeUrl.fetchMemeUrl(spongebobify.spongebobify(param)));
-      console.log(memeUrlGenerated);
-      console.log("running test loop...")
       var encodedData = await imgToBase.imgToBase(memeUrlGenerated);
-      // console.log(encodedData);
 
       var twitterImgUploadResponse = await uploadImage.uploadImage(encodedData);
       var idStr = JSON.parse(twitterImgUploadResponse);
-      var idStrValue = idStr.media_id_string;
+        var idStrValue = idStr.media_id_string;
 
-      var postText = '#MaGa #TrUmP #PoLiTiCs';
+        var postText = '#TrUmP #PoLiTiCs ' + twitterDetect.hash(param);
 
       var post = await addPost.addPost(postText, idStrValue);
-      console.log(post);
     }
   }
 }
 
 // setInterval(function () { mainLoop(); }, 60000);
 
-setInterval(mainLoop, 60000);
+mainLoop();
+//setInterval(mainLoop, 60000);
 
 //Mocking Trump 145802073
 //Spongebob 102156234

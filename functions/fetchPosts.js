@@ -12,7 +12,8 @@ module.exports = {
             screen_name: 'realDonaldTrump',
             trim_user: 1,
             count: 1,
-            tweet_mode: 'extended'
+            tweet_mode: 'extended',
+            include_rts: false
 
         };
 

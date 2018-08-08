@@ -27,10 +27,10 @@ module.exports = {
     var newtweetarray = newstr.split(" ");
     for (var i = 0; i < origtweetarray.length; i++) {
       if (!isAlpha.isAlpha(origtweetarray[i][0])) {
-        newtweetarray[i] = origtweetarray[i];
+        newtweetarray[i] = '';
       }
       else if (isLink.isLink(origtweetarray[i])) {
-        newtweetarray[i] = origtweetarray[i];
+        newtweetarray[i] = '';
       }
     }
     newstr = newtweetarray.join(" ");

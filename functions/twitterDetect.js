@@ -13,7 +13,7 @@ module.exports = {
       }
     }
 
-    return tagList;
+      return tagList.join(' ');
   },
   mention: function (str) {
     var splitArr = str.split(" ");
@@ -27,7 +27,7 @@ module.exports = {
       }
     }
 
-    return mentionList;
+      return mentionList.join(' ');
 
   }
 }

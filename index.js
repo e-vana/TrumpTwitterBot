@@ -56,38 +56,38 @@ async function mainLoop() {
   // console.log(date);
   console.log("Checking for new Tweet... " + "@" + ' ' + date)
   var data = await fetchPosts.fetchPosts();
+  console.log(data);
 
   var param;
   // Iterate through data from fetchPosts
-  for (i = 0; i < data.length; i++) {
-    var dupe = await saveTweets.saveTweets(data[i]);
-    if (dupe === false) {
-      console.log(dupe);
+  var dupe = await saveTweets.saveTweets(data[0]);
+  if (dupe === false) {
+    console.log(dupe);
 
-      param = data[i].full_text;
+    param = data[0].full_text;
+    console.log(param);
 
-      var memeUrlGenerated = await (fetchMemeUrl.fetchMemeUrl(spongebobify.spongebobify(param)));
-      console.log("Generating Meme URL... " + "@" + ' ' + date);
-      var encodedData = await imgToBase.imgToBase(memeUrlGenerated);
-      console.log("Converting URL to base64..." + "@" + ' ' + date);
+    var memeUrlGenerated = await (fetchMemeUrl.fetchMemeUrl(spongebobify.spongebobify(param)));
+    console.log("Generating Meme URL... " + "@" + ' ' + date);
+    var encodedData = await imgToBase.imgToBase(memeUrlGenerated);
+    console.log("Converting URL to base64..." + "@" + ' ' + date);
 
 
-      var twitterImgUploadResponse = await uploadImage.uploadImage(encodedData);
-      console.log("Uploading to Twitter... " + "@" + ' ' + date);
-      var idStr = JSON.parse(twitterImgUploadResponse);
-      var idStrValue = idStr.media_id_string;
+    var twitterImgUploadResponse = await uploadImage.uploadImage(encodedData);
+    console.log("Uploading to Twitter... " + "@" + ' ' + date);
+    var idStr = JSON.parse(twitterImgUploadResponse);
+    var idStrValue = idStr.media_id_string;
 
-        var thisHash = twitterDetect.hash(param);
-      // console.log(thisHash);
+    var thisHash = twitterDetect.hash(param);
+    // console.log(thisHash);
 
-      var flag = emoji.get(':us:');
-      var postText = flag + flag + ' ' + '#Trump #Politics' + ' ' + thisHash + ' ' + flag + flag;
-      // console.log(postText);
-      var post = await addPost.addPost(postText, idStrValue);
-      console.log("Posting " + data[i].id_str + ' ' + "to Twitter... " + "@" + ' ' + date);
+    var flag = emoji.get(':us:');
+    var postText = flag + flag + ' ' + '#Trump #Politics' + ' ' + thisHash + ' ' + flag + flag;
+    // console.log(postText);
+    var post = await addPost.addPost(postText, idStrValue);
+    console.log("Posting " + data[0].id_str + ' ' + "to Twitter... " + "@" + ' ' + date);
 
-      // console.log(post);
-    }
+    // console.log(post);
   }
 }
 

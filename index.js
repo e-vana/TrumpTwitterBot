@@ -77,7 +77,7 @@ async function mainLoop() {
       var idStr = JSON.parse(twitterImgUploadResponse);
       var idStrValue = idStr.media_id_string;
 
-      var thisHash = twitterDetect.hash(data[i].full_text)
+        var thisHash = twitterDetect.hash(param);
       // console.log(thisHash);
 
       var flag = emoji.get(':us:');

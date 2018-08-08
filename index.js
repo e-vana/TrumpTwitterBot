@@ -67,20 +67,26 @@ async function mainLoop() {
       param = data[i].full_text;
 
       var memeUrlGenerated = await (fetchMemeUrl.fetchMemeUrl(spongebobify.spongebobify(param)));
+      console.log("Generating Meme URL... " + "@" + ' ' + date);
       var encodedData = await imgToBase.imgToBase(memeUrlGenerated);
+      console.log("Converting URL to base64..." + "@" + ' ' + date);
+
 
       var twitterImgUploadResponse = await uploadImage.uploadImage(encodedData);
+      console.log("Uploading to Twitter... " + "@" + ' ' + date);
       var idStr = JSON.parse(twitterImgUploadResponse);
       var idStrValue = idStr.media_id_string;
 
       var thisHash = twitterDetect.hash(data[i].full_text)
-      console.log(thisHash);
+      // console.log(thisHash);
 
       var flag = emoji.get(':us:');
       var postText = flag + flag + ' ' + '#Trump #Politics' + ' ' + thisHash + ' ' + flag + flag;
-      console.log(postText);
+      // console.log(postText);
       var post = await addPost.addPost(postText, idStrValue);
-      console.log(post);
+      console.log("Posting " + data[i].id_str + ' ' + "to Twitter... " + "@" + ' ' + date);
+
+      // console.log(post);
     }
   }
 }

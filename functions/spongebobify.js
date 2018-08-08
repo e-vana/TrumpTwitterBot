@@ -27,13 +27,14 @@ module.exports = {
     }
     var newtweetarray = newstr.split(" ");
     for (var i = 0; i < origtweetarray.length; i++) {
-        if (twitterDetect.hash(origtweetarray[i]) != '' || twitterDetect.mention(origtweetarray[i]) != '') {
+      if (twitterDetect.hash(origtweetarray[i]) != '' || twitterDetect.mention(origtweetarray[i]) != '') {
         newtweetarray[i] = '';
-        }
-        else if (isLink.isLink(origtweetarray[i])) {
-            newtweetarray[i] = '';
-        }
-    newstr = newtweetarray.join(" ");
-    return newstr;
+      }
+      else if (isLink.isLink(origtweetarray[i])) {
+        newtweetarray[i] = '';
+      }
+      newstr = newtweetarray.join(" ");
+      return newstr;
+    }
   }
 }

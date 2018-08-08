@@ -5,6 +5,7 @@
 
 const isAlpha = require("./isAlpha");
 const isLink = require("./isLink");
+const twitterDetect = require("./twitterDetect.js");
 
 module.exports = {
   spongebobify: function (str) {
@@ -26,13 +27,12 @@ module.exports = {
     }
     var newtweetarray = newstr.split(" ");
     for (var i = 0; i < origtweetarray.length; i++) {
-      if (!isAlpha.isAlpha(origtweetarray[i][0])) {
+        if (twitterDetect.hash(origtweetarray[i]) != '' || twitterDetect.mention(origtweetarray[i]) != '') {
         newtweetarray[i] = '';
-      }
-      else if (isLink.isLink(origtweetarray[i])) {
-        newtweetarray[i] = '';
-      }
-    }
+        }
+        else if (isLink.isLink(origtweetarray[i])) {
+            newtweetarray[i] = '';
+        }
     newstr = newtweetarray.join(" ");
     return newstr;
   }

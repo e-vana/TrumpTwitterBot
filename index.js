@@ -38,6 +38,8 @@ const addPost = require("./functions/addPost.js");
 const fetchMemeUrl = require("./functions/fetchMemeUrl.js");
 const imgToBase = require("./functions/imgToBase.js");
 
+//Test Flag
+
 // Required to use .env
 dotenv.config();
 

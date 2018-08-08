@@ -56,16 +56,16 @@ async function mainLoop() {
   // console.log(date);
   console.log("Checking for new Tweet... " + "@" + ' ' + date)
   var data = await fetchPosts.fetchPosts();
-  console.log(data);
+  // console.log(data);
 
   var param;
   // Iterate through data from fetchPosts
   var dupe = await saveTweets.saveTweets(data[0]);
   if (dupe === false) {
-    console.log(dupe);
+    // console.log(dupe);
 
     param = data[0].full_text;
-    console.log(param);
+    // console.log(param);
 
     var memeUrlGenerated = await (fetchMemeUrl.fetchMemeUrl(spongebobify.spongebobify(param)));
     console.log("Generating Meme URL... " + "@" + ' ' + date);

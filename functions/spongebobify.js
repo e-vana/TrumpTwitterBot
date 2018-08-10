@@ -8,33 +8,51 @@ const isLink = require("./isLink");
 const twitterDetect = require("./twitterDetect.js");
 
 module.exports = {
-  spongebobify: function (str) {
-    var origtweetarray = str.split(" ");
-    var newstr = "";
-    var upper = true;
-    for (var i = 0; i < str.length; i++) {
-      if (isAlpha.isAlpha(str[i]) && upper) {
-        newstr += str[i].toUpperCase();
-        upper = false;
-      }
-      else if (isAlpha.isAlpha(str[i]) && !upper) {
-        newstr += str[i].toLowerCase();
-        upper = true;
-      }
-      else if (!isAlpha.isAlpha(str[i])) {
-        newstr += str[i];
-      }
+    spongebobify: function (str) {
+        
+        var input = str.replace(/(&amp;)/, "&");
+        input = str.replace(/(&lt;)/, "<");
+        input = str.replace(/(&gt;)/, ">");
+        var origtweetarray = str.split(" ");
+        var newstr = "";
+        var upper = true;
+        for (var i = 0; i < str.length; i++) {
+            if (isAlpha.isAlpha(str[i]) && upper) {
+                newstr += str[i].toUpperCase();
+                upper = false;
+            }
+            else if (isAlpha.isAlpha(str[i]) && !upper) {
+                newstr += str[i].toLowerCase();
+                upper = true;
+            }
+            else if (!isAlpha.isAlpha(str[i])) {
+                newstr += str[i];
+            }
+        }
+        var newtweetarray = newstr.split(" ");
+        for (var i = 0; i < origtweetarray.length; i++) {
+            if (twitterDetect.hash(origtweetarray[i]) != '') {
+                newtweetarray.splice(i, 1);
+                origtweetarray.splice(i, 1);
+                i--;
+            }
+            else if (isLink.isLink(origtweetarray[i])) {
+                newtweetarray.splice(i, 1);
+                origtweetarray.splice(i, 1);
+                i--;
+            }
+            //twitter returns & < > as &amp; &lt; &gt;
+            else if (origtweetarray[i] == "&amp;") {
+                newtweetarray[i] = "&";
+            }
+            else if (origtweetarray[i] == "&lt;") {
+                newtweetarray[i] = "<";
+            }
+            else if (origtweetarray[i] == "&gt;") {
+                newtweetarray[i] = ">";
+            }
+        }
+        newstr = newtweetarray.join(" ");
+        return newstr;
     }
-    var newtweetarray = newstr.split(" ");
-    for (var i = 0; i < origtweetarray.length; i++) {
-      if (twitterDetect.hash(origtweetarray[i]) != '' || twitterDetect.mention(origtweetarray[i]) != '') {
-        newtweetarray[i] = '';
-      }
-      else if (isLink.isLink(origtweetarray[i])) {
-        newtweetarray[i] = '';
-      }
-      newstr = newtweetarray.join(" ");
-      return newstr;
-    }
-  }
 }

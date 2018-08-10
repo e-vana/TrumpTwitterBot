@@ -6,13 +6,12 @@
 const isAlpha = require("./isAlpha");
 const isLink = require("./isLink");
 const twitterDetect = require("./twitterDetect.js");
+const emoji = require("node-emoji");
 
 module.exports = {
     spongebobify: function (str) {
         
-        var input = str.replace(/(&amp;)/, "&");
-        input = str.replace(/(&lt;)/, "<");
-        input = str.replace(/(&gt;)/, ">");
+        str = emoji.strip(str);
         var origtweetarray = str.split(" ");
         var newstr = "";
         var upper = true;

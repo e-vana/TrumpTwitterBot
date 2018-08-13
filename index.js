@@ -64,8 +64,6 @@ firestore.settings(settings);
 
 var db = firebase.firestore();
 
-
-
 const app = express();
 const PORT = process.env.PORT || 4000;
 
@@ -88,24 +86,6 @@ function readDb() {
   })
 }
 
-// function readDb() {
-//   var theseTweets = [];
-//   return new Promise(function (resolve, reject) {
-//     db.collection("Tweets").get().then((querySnapshot) => {
-//       console.log(querySnapshot.docs[0].data());
-//     }
-//     ).catch(function (error) {
-//       console.log(error);
-//     })
-//   })
-// }
-
-
-
-
-// readDb();
-
-
 function writeDb(Tweet_ID, Tweet_Text) {
   return new Promise(function (resolve, reject) {
     db.collection("Tweets").add({
@@ -122,18 +102,14 @@ function writeDb(Tweet_ID, Tweet_Text) {
   })
 }
 
-async function mainLoop() {
+async function mainLoop(thisTweet) {
+  var storedTweets = thisTweet;
   var date = new Date();
   // console.log(date);
   console.log("Checking for new Tweet... " + "@" + ' ' + date)
   var data = await fetchPosts.fetchPosts();
   var dataId = data[0].id;
   var dataText = data[0].full_text;
-
-  // console.log(dataId);
-
-  var storedTweets = await readDb();
-  // console.log(storedTweets);
 
   var matches = false;
   var needToWrite = false;
@@ -143,14 +119,16 @@ async function mainLoop() {
       matches = true;
       break;
     }
-    //  else {
-    //   needToWrite = true;
-    // }
+
   }
 
   // console.log("Does it match? : " + matches);
 
   if (matches == false) {
+    storedTweets.push({
+      id: dataId,
+      text: dataText
+    })
     console.log("Writing Tweet to DB... " + "@" + ' ' + date);
     await writeDb(dataId, dataText);
     var param;
@@ -175,15 +153,29 @@ async function mainLoop() {
     var flag = emoji.get(':us:');
     var postText = flag + flag + ' ' + '#Trump #Politics' + ' ' + thisHash + ' ' + flag + flag;
     // console.log(postText);
-    var post = await addPost.addPost(postText, idStrValue);
+    // var post = await addPost.addPost(postText, idStrValue);
     console.log("Posting " + data[0].id_str + ' ' + "to Twitter... " + "@" + ' ' + date);
 
     // console.log(post);
   }
 }
 
-setInterval(mainLoop, 15000);
 
+
+
+async function onMount() {
+  var latestTweet = null;
+  var latestTweet = await readDb();
+
+  console.log(latestTweet);
+
+  if (latestTweet != null) {
+    setInterval(mainLoop, 15000, latestTweet);
+  }
+}
+
+
+onMount();
 //Mocking Trump 145802073
 //Spongebob 102156234
 
